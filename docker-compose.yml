@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+  projectmanagement.api:
+    image: ${DOCKER_REGISTRY-}projectmanagementapi
+    build:
+      context: .
+      dockerfile: ProjectManagement.API/Dockerfile
+    networks:
+      - mynetwork
+
+  postgresql:
+    image: postgres:14-alpine
+    container_name: postgresql
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=example
+      #- POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - 5432:5432
+    networks:
+      - mynetwork
+  
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
